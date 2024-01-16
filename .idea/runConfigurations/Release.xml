@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Release" type="CompoundRunConfigurationType">
+    <toRun name="poster [createReleaseDistributable]" type="GradleRunConfiguration" />
+    <toRun name="poster [packageReleaseUberJarForCurrentOS]" type="GradleRunConfiguration" />
+    <method v="2" />
+  </configuration>
+</component>
