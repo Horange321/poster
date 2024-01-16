@@ -8,7 +8,7 @@ data class Api(
     var title: String,
     var desc: String,
 ) : Serializable {
-    var method: Short = 0
+    var method: Int = 0
     var url = "http://localhost:8080/"
     val params = Properties()
     val headers = Properties()

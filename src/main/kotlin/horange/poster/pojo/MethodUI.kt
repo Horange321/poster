@@ -7,10 +7,10 @@ class MethodUI {
         private set
     var color = Color(0, 0, 0)
         private set
-    var id: Short = 0
+    var id: Int = 0
         private set
 
-    private fun build(x: Short) {
+    private fun build(x: Int) {
         id = x
         when (x.toInt()) {
             0 -> {
@@ -27,7 +27,7 @@ class MethodUI {
         }
     }
 
-    constructor(x: Short) {
+    constructor(x: Int) {
         build(x)
     }
 

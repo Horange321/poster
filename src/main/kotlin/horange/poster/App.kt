@@ -56,7 +56,7 @@ class App(private val f: File) {
     }
 
 
-    @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+    @OptIn(ExperimentalFoundationApi::class)
     @Preview
     @Composable
     fun Win() {
@@ -192,7 +192,7 @@ class App(private val f: File) {
                                 { dd_method_exp = false }
                             ) {
                                 for (i in 0..1) {
-                                    val m = MethodUI(i.toShort())
+                                    val m = MethodUI(i)
                                     Text(
                                         m.name,
                                         fontSize = 32.sp,
@@ -202,7 +202,7 @@ class App(private val f: File) {
                                             .fillMaxWidth()
                                             .onClick {
                                                 dd_method_exp = false
-                                                method = MethodUI(i.toShort())
+                                                method = MethodUI(i)
                                             }
                                     )
                                 }
@@ -235,7 +235,7 @@ class App(private val f: File) {
                                     }
                                 }
                                 http.newCall(
-                                    when (method.id.toInt()) {
+                                    when (method.id) {
                                         0 ->
                                             Request.Builder()
                                                 .url(url.build())
