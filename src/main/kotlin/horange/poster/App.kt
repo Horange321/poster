@@ -232,8 +232,15 @@ class App(private val f: File) {
                                         url.addQueryParameter(p.key as String, p.value as String)
                                     }
                                 }
+
                                 val req = Request.Builder()
                                     .url(url.build())
+                                Properties().let {
+                                    it.load(te_headers.byteInputStream())
+                                    it.forEach { h ->
+                                        req.header(h.key as String, h.value as String)
+                                    }
+                                }
                                 http.newCall(
                                     when (method.id) {
                                         0 -> req
