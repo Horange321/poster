@@ -185,7 +185,7 @@ class App(private val f: File) {
                                 dd_method_exp,
                                 { dd_method_exp = false }
                             ) {
-                                for (i in 0..1) {
+                                for (i in 0..5) {
                                     val m = MethodUI(i)
                                     TextButton(
                                         {
@@ -241,6 +241,9 @@ class App(private val f: File) {
                                         req.header(h.key as String, h.value as String)
                                     }
                                 }
+
+                                val rb = te_body.toRequestBody("application/json".toMediaType())
+
                                 http.newCall(
                                     when (method.id) {
                                         0 -> req
@@ -248,7 +251,23 @@ class App(private val f: File) {
                                             .build()
 
                                         1 -> req
-                                            .post(te_body.toRequestBody("application/json".toMediaType()))
+                                            .post(rb)
+                                            .build()
+
+                                        2 -> req
+                                            .put(rb)
+                                            .build()
+
+                                        3 -> req
+                                            .patch(rb)
+                                            .build()
+
+                                        4 -> req
+                                            .delete(rb)
+                                            .build()
+
+                                        5 -> req
+                                            .head()
                                             .build()
 
                                         else -> throw RuntimeException("Unknown method: ${method.name}")

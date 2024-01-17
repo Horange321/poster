@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "horange"
-version = "1.1.3"
+version = "2.2.1"
 
 repositories {
     maven("https://maven.aliyun.com/repository/public")

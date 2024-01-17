@@ -17,7 +17,6 @@ data class Api(
     init {
         headers["Content-Type"] = "application/json"
         headers["User-Agent"] = "PosterRuntime"
-
     }
 }
 
