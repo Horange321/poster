@@ -96,7 +96,7 @@ class App(private val f: File) {
                             dia_new = true
                         }
                 )
-                for (i in apis.indices) {
+                apis.forEachIndexed { i, v ->
                     Column(
                         Modifier
                             .fillMaxWidth()
@@ -107,14 +107,12 @@ class App(private val f: File) {
                                 dia_edit = true
                             }) {
                                 api = i
-                                apis[i].let {
-                                    te_title = it.title
-                                    te_url = it.url
-                                    method = MethodUI(it.method)
-                                    te_headers = it.headers.toPropertyString("headers")
-                                    te_params = it.params.toPropertyString("params")
-                                    te_body = it.body
-                                }
+                                te_title = v.title
+                                te_url = v.url
+                                method = MethodUI(v.method)
+                                te_headers = v.headers.toPropertyString("headers")
+                                te_params = v.params.toPropertyString("params")
+                                te_body = v.body
                             }
                     ) {
                         Text(
@@ -130,47 +128,41 @@ class App(private val f: File) {
                 }
             }
 
+            //右侧
             Column(
                 Modifier
                     .weight(4f)
             ) {
+                //te_title
+                Text(
+                    te_title,
+                    color = Color.White,
+                    fontSize = 32.sp,
+                    modifier = Modifier
+                        .background(Color(0xff, 0x8a, 0))
+                        .fillMaxWidth()
+                        .onClick {
+                            apis[api].let {
+                                it.method = method.id
+                                it.url = te_url
+                                it.headers.clear()
+                                it.headers.load(te_headers.byteInputStream())
+                                it.params.clear()
+                                it.params.load(te_params.byteInputStream())
+                                it.body = te_body
+                            }
+                            f.outputStream().let { s ->
+                                ObjectOutputStream(s).writeObject(apis)
+                                s.close()
+                            }
+                            JOptionPane.showMessageDialog(
+                                null,
+                                "Saved"
+                            )
+                        }
+                )
+
                 //上部编辑区
-                Row {
-                    //te_title
-                    TextField(
-                        te_title,
-                        { te_title = it },
-                        maxLines = 1,
-                        label = { Text("title") },
-                        modifier = Modifier
-                            .weight(1f)
-                    )
-
-                    //bu_save
-                    Button({
-                        apis[api].let {
-                            it.title = te_title
-                            it.method = method.id
-                            it.url = te_url
-                            it.headers.clear()
-                            it.headers.load(te_headers.byteInputStream())
-                            it.params.clear()
-                            it.params.load(te_params.byteInputStream())
-                            it.body = te_body
-                        }
-                        f.outputStream().let { s ->
-                            ObjectOutputStream(s).writeObject(apis)
-                            s.close()
-                        }
-                    }) {
-                        Text(
-                            "Save",
-                            fontSize = 30.sp
-                        )
-                    }
-                }
-
-                //右半边
                 Column(
                     Modifier
                         .weight(1f)
@@ -180,31 +172,37 @@ class App(private val f: File) {
                     Row {
                         //dd_method
                         Column {
-                            Text(
-                                "${method.name} ",
-                                fontSize = 32.sp,
-                                color = method.color,
-                                modifier = Modifier
-                                    .onClick { dd_method_exp = true }
-                                    .shadow(2.dp))
+                            TextButton(
+                                { dd_method_exp = true },
+                            ) {
+                                Text(
+                                    method.name + ' ',
+                                    fontSize = 32.sp,
+                                    color = method.color
+                                )
+                            }
                             DropdownMenu(
                                 dd_method_exp,
                                 { dd_method_exp = false }
                             ) {
                                 for (i in 0..1) {
                                     val m = MethodUI(i)
-                                    Text(
-                                        m.name,
-                                        fontSize = 32.sp,
-                                        color = m.color,
+                                    TextButton(
+                                        {
+                                            dd_method_exp = false
+                                            method = MethodUI(i)
+                                        },
                                         modifier = Modifier
-                                            .shadow(2.dp)
-                                            .fillMaxWidth()
-                                            .onClick {
-                                                dd_method_exp = false
-                                                method = MethodUI(i)
-                                            }
-                                    )
+                                    ) {
+                                        Text(
+                                            m.name,
+                                            fontSize = 32.sp,
+                                            color = m.color,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -234,20 +232,17 @@ class App(private val f: File) {
                                         url.addQueryParameter(p.key as String, p.value as String)
                                     }
                                 }
+                                val req = Request.Builder()
+                                    .url(url.build())
                                 http.newCall(
                                     when (method.id) {
-                                        0 ->
-                                            Request.Builder()
-                                                .url(url.build())
-                                                .get()
-                                                .build()
+                                        0 -> req
+                                            .get()
+                                            .build()
 
-
-                                        1 ->
-                                            Request.Builder()
-                                                .url(url.build())
-                                                .post(te_body.toRequestBody("application/json".toMediaType()))
-                                                .build()
+                                        1 -> req
+                                            .post(te_body.toRequestBody("application/json".toMediaType()))
+                                            .build()
 
                                         else -> throw RuntimeException("Unknown method: ${method.name}")
                                     }
@@ -275,6 +270,8 @@ class App(private val f: File) {
                             )
                         }
                     }
+
+                    //中部参数区
                     Row(
                         Modifier
                             .fillMaxSize()
@@ -310,6 +307,7 @@ class App(private val f: File) {
                     }
                 }
 
+                //下部输出栏
                 Column(
                     Modifier
                         .weight(1f)
@@ -340,7 +338,8 @@ class App(private val f: File) {
                         TextField(
                             te_new_title,
                             { te_new_title = it },
-                            label = { Text("Title") }
+                            label = { Text("Title") },
+                            maxLines = 1
                         )
 
                         //te_new_desc
@@ -375,7 +374,8 @@ class App(private val f: File) {
                         TextField(
                             te_new_title,
                             { te_new_title = it },
-                            label = { Text("Title") }
+                            label = { Text("Title") },
+                            maxLines = 1
                         )
 
                         //te_new_desc
