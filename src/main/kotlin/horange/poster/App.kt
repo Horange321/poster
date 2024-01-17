@@ -23,9 +23,10 @@ import java.io.File
 import java.io.IOException
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
-import java.util.Properties
+import java.util.*
 import java.util.logging.Logger
 import javax.swing.JOptionPane
+import kotlin.collections.ArrayList
 
 class App(private val f: File) {
     private val log = Logger.getLogger("App")
@@ -74,6 +75,7 @@ class App(private val f: File) {
         var te_resp_err by remember { mutableStateOf(false) }
         var dia_new by remember { mutableStateOf(false) }
         var dia_edit by remember { mutableStateOf(false) }
+        var t1 = Date().time
 
 
         Row(Modifier.fillMaxSize()) {
@@ -281,12 +283,23 @@ class App(private val f: File) {
                                     }
 
                                     override fun onResponse(call: Call, response: Response) {
+                                        val t2 = Date().time
                                         te_resp_err = false
-                                        te_resp = response.code.toString() + '\n'
-                                        te_resp += response.body?.string() ?: "No response body"
+                                        val sb = StringBuilder()
+                                        sb.append(response.code.toString())
+                                        sb.append("   ")
+                                        sb.append(t2 - t1)
+                                        sb.append("ms   ")
+                                        val resp = response.body?.string() ?: "No response body"
+                                        response.close()
+                                        sb.append(resp.length / 1000)
+                                        sb.append("kB\n")
+                                        sb.append(resp)
+                                        te_resp = sb.toString()
                                         bu_send = true
                                     }
                                 })
+                                t1 = Date().time
                             },
                             enabled = bu_send
                         ) {
