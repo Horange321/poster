@@ -6,11 +6,13 @@ plugins {
 }
 
 group = "horange"
-version = "2.2.1"
+version = "2.3.3"
+val versionCode = 3
 
 repositories {
     maven("https://maven.aliyun.com/repository/public")
     maven("https://maven.aliyun.com/repository/apache-snapshots")
+    maven("https://maven.aliyun.com/repository/google")
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     google()
@@ -22,6 +24,7 @@ dependencies {
     // (in a separate module for demo project and in testMain).
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
+    implementation("org.jetbrains.compose.material3:material3-desktop:1.5.11")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }
 
