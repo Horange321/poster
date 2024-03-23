@@ -1,0 +1,21 @@
+stages:
+  - build
+  - release
+
+build:
+    stage: build
+    script: gradle build
+
+jar:
+    stage: release
+    script: gradle packageReleaseUberJarForCurrentOS
+    artifacts:
+        paths:
+            - "build/compose/jars/"
+
+pkg:
+    stage: release
+    script: gradle createReleaseDistributable
+    artifacts:
+        paths:
+            - "build/compose/binaries/main-release/app/"
