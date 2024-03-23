@@ -4,7 +4,7 @@ stages:
 
 build:
     stage: build
-    script: gradle build
+    script: ./gradlew build
 
 jar:
     stage: release
