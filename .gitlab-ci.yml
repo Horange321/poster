@@ -8,14 +8,14 @@ build:
 
 jar:
     stage: release
-    script: gradle packageReleaseUberJarForCurrentOS
+    script: ./gradlew packageReleaseUberJarForCurrentOS
     artifacts:
         paths:
             - "build/compose/jars/"
 
 pkg:
     stage: release
-    script: gradle createReleaseDistributable
+    script: ./gradlew createReleaseDistributable
     artifacts:
         paths:
             - "build/compose/binaries/main-release/app/"
