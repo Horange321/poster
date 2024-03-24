@@ -2,13 +2,25 @@ stages:
   - build
   - release
 
+before_script:
+    - apt update
+    - apt install openjdk-17-jdk
+
 build:
     stage: build
     script: ./gradlew build
+    cache:
+        paths:
+            - .gradle
+            - build
 
 jar:
     stage: release
     script: ./gradlew packageReleaseUberJarForCurrentOS
+    cache:
+        paths:
+            - .gradle
+            - build
     artifacts:
         paths:
             - "build/compose/jars/"
@@ -16,6 +28,10 @@ jar:
 pkg:
     stage: release
     script: ./gradlew createReleaseDistributable
+    cache:
+        paths:
+            - .gradle
+            - build
     artifacts:
         paths:
             - "build/compose/binaries/main-release/app/"
