@@ -3,11 +3,12 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     kotlin("jvm")
     id("org.jetbrains.compose")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 group = "horange"
-version = "2.3.3"
-val versionCode = 3
+version = "2.3.4"
+val versionCode = 4
 
 repositories {
     maven("https://maven.aliyun.com/repository/public")
