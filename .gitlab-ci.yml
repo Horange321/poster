@@ -12,7 +12,7 @@ build:
 
 jar:
     stage: release
-    script: ./gradlew packageReleaseUberJarForCurrentOS
+    script: ./gradlew packageUberJarForCurrentOS
     cache:
         paths:
             - .gradle
@@ -23,7 +23,7 @@ jar:
 
 pkg:
     stage: release
-    script: ./gradlew createReleaseDistributable
+    script: ./gradlew createDistributable
     cache:
         paths:
             - .gradle
